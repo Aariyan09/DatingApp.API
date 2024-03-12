@@ -1,6 +1,6 @@
 ﻿using DatingApp.API.Data;
 using DatingApp.API.Entities;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,12 +17,14 @@ namespace DatingApp.API.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> Get()
         {
             var users = await _db.Users.ToListAsync();
             return users;
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetUser(int id)
