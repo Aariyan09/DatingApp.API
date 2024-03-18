@@ -1,18 +1,16 @@
-﻿using DatingApp.API.Extenstions;
+﻿using DatingApp.API.Entities;
+using DatingApp.API.Extenstions;
 
-namespace DatingApp.API.Entities
+namespace DatingApp.API.DTOs.Response
 {
-    public class AppUser
+    public class Member_DTO
     {
         public int ID { get; set; }
 
         public string UserName { get; set; }
+        public string PhotoUrl { get; set; }
 
-        public byte[] PasswordHash { get; set; }
-
-        public byte[] PasswordSalt { get; set; }
-
-        public DateTime DateOfBirth { get; set; }
+        public int Age { get; set; }
 
         public string KnownAs { get; set; }
 
@@ -28,11 +26,7 @@ namespace DatingApp.API.Entities
 
         public string Country { get; set; }
 
-        public List<Photo> Photos { get; set; } = new ();
+        public List<Photo_DTO> Photos { get; set; } = new();
 
-        //public int GetAge()
-        //{
-        //    return DateOfBirth.CalculateAge();
-        //}
     }
 }
