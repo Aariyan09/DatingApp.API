@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DatingApp.API.Data.Migrations
+namespace DatingApp.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240318162940_INITIALIZEDB")]
-    partial class INITIALIZEDB
+    [Migration("20240319170705_InitializeDB")]
+    partial class InitializeDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,10 @@ namespace DatingApp.API.Data.Migrations
 
                     b.Property<DateTime>("LastActive")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("LookingFor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()

@@ -16,6 +16,8 @@ namespace DatingApp.API.Entities
 
         public string KnownAs { get; set; }
 
+        public string LookingFor { get; set; }
+
         public DateTime Created_On { get; set; } = DateTime.UtcNow;
 
         public DateTime LastActive { get; set; } = DateTime.UtcNow;
