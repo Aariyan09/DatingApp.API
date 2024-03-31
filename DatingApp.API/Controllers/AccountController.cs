@@ -1,7 +1,9 @@
-﻿using DatingApp.API.Data;
+﻿using AutoMapper;
+using DatingApp.API.Data;
 using DatingApp.API.DTOs.Requests;
 using DatingApp.API.DTOs.Response;
 using DatingApp.API.Entities;
+using DatingApp.API.Helpers;
 using DatingApp.API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,16 +13,20 @@ using System.Text;
 namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
+    [ServiceFilter(typeof(LogUserActivity))]
     [ApiController]
     public class AccountController : ControllerBase
     {
         private readonly DataContext _db;
         private readonly ITokenService _token;
+        private readonly IMapper _map;
 
-        public AccountController(DataContext db, ITokenService token)
+
+        public AccountController(DataContext db, ITokenService token, IMapper map)
         {
             _db = db;
             _token = token;
+            _map = map;
         }
 
 
@@ -29,20 +35,23 @@ namespace DatingApp.API.Controllers
         {
             if (await UserExists(register.UserName)) return BadRequest("Username is taken");
 
+            var user = _map.Map<AppUser>(register);
+
             using var hmac = new HMACSHA512();
-            var user = new AppUser
-            {
-                UserName = register.UserName,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(register.Password)),
-                PasswordSalt = hmac.Key
-            };
+
+            user.UserName = register.UserName.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(register.Password));
+            user.PasswordSalt = hmac.Key;
 
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
+
             return new UserDTO
             {
                 UserName = user.UserName,
-                Token = _token.CreateToken(user)
+                KnownAs = user.KnownAs,
+                Token = _token.CreateToken(user),
+                Gender = user.Gender
             };
         }
 
@@ -64,7 +73,9 @@ namespace DatingApp.API.Controllers
             return new UserDTO
             {
                 UserName = user.UserName,
-                Token = _token.CreateToken(user)
+                KnownAs = user.KnownAs,
+                Token = _token.CreateToken(user),
+                Gender = user.Gender
             };
         }
 
@@ -73,5 +84,7 @@ namespace DatingApp.API.Controllers
         {
             return await _db.Users.AnyAsync(x => x.UserName.ToUpper() == username.ToUpper());
         }
+
+
     }
 }

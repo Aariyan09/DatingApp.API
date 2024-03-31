@@ -8,13 +8,13 @@ namespace DatingApp.API.DTOs.Response
         public int ID { get; set; }
 
         public string UserName { get; set; }
-        public string PhotoUrl { get; set; }
+        public string? PhotoUrl { get; set; }
 
         public int Age { get; set; }
 
         public string KnownAs { get; set; }
 
-        public string LookingFor { get; set; }
+        public string? LookingFor { get; set; }
 
         public DateTime Created_On { get; set; } = DateTime.UtcNow;
 
@@ -22,7 +22,7 @@ namespace DatingApp.API.DTOs.Response
 
         public string Gender { get; set; }
 
-        public string Introduction { get; set; }
+        public string? Introduction { get; set; }
 
         public string City { get; set; }
 

@@ -1,9 +1,11 @@
 ﻿using DatingApp.API.Extenstions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DatingApp.API.Entities
 {
     public class AppUser
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         public string UserName { get; set; }
@@ -16,7 +18,7 @@ namespace DatingApp.API.Entities
 
         public string KnownAs { get; set; }
 
-        public string LookingFor { get; set; }
+        public string? LookingFor { get; set; }
 
         public DateTime Created_On { get; set; } = DateTime.UtcNow;
 
@@ -24,7 +26,7 @@ namespace DatingApp.API.Entities
 
         public string Gender { get; set; }
 
-        public string Introduction { get; set; }
+        public string? Introduction { get; set; }
 
         public string City { get; set; }
 

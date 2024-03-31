@@ -3,13 +3,17 @@ using DatingApp.API.DTOs.Requests;
 using DatingApp.API.DTOs.Response;
 using DatingApp.API.Entities;
 using DatingApp.API.Extenstions;
+using DatingApp.API.Helpers;
 using DatingApp.API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
+    [ServiceFilter(typeof(LogUserActivity))]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -34,15 +38,25 @@ namespace DatingApp.API.Controllers
         }
 
 
-        [HttpGet("GetUserById/{id}")]
-        public async Task<ActionResult<Member_DTO>> GetUserById(int id)
+        [HttpGet("GetUsers")]
+        public async Task<ActionResult<PagedList<Member_DTO>>> GetUsers([FromQuery] UserParams userParams)
         {
-            var user = await _userRepo.GetAllMembersAsync();
+            var currentuser = await _userRepo.GetUserByNameAsync(User.GetUserName());
+            userParams.CurrentUserName = currentuser.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender)) 
+            {
+                userParams.Gender = currentuser.Gender == "male" ? "Female" : "male";
+            } 
+
+            var user = await _userRepo.GetAllMembersAsync(userParams);
+            Response.AddPaginationHeader(new PaginationHeader(user.CurrentPage,user.PageSize,user.TotalCount,user.TotalPages));
             return Ok(user);
         }
 
 
         [HttpGet("GetUserByName/{username}")]
+        [ServiceFilter(typeof(LogUserActivity))]
         public async Task<ActionResult<Member_DTO>> GetUserByName(string username)
         {
             var user = await _userRepo.GetMemberByNameAsync(username);
