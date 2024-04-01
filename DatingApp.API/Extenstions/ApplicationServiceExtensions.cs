@@ -51,6 +51,7 @@ namespace DatingApp.API.Extenstions
 
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<ILikedRepository, LikedRepository>();
 
             services.AddScoped<LogUserActivity>();
 
