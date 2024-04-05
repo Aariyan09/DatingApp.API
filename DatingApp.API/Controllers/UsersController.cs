@@ -28,6 +28,7 @@ namespace DatingApp.API.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Member_DTO>>> Get()
         {
@@ -38,6 +39,7 @@ namespace DatingApp.API.Controllers
         }
 
 
+        [Authorize(Roles = "Member")]
         [HttpGet("GetUsers")]
         public async Task<ActionResult<PagedList<Member_DTO>>> GetUsers([FromQuery] UserParams userParams)
         {
